@@ -27,7 +27,17 @@ export default class LoginService {
     private tokenProvider: ITokenProvider
   ) {}
 
-  async execute({ user, password }: IRequest): Promise<{ token: string } | AppError> {
+  async execute({ user, password }: IRequest): Promise<
+    | {
+        id: string;
+        username: string;
+        firstName: string;
+        token: string;
+        role: string;
+        lastName: string;
+      }
+    | AppError
+  > {
     const private_key = fs.readFileSync('./private.key', 'utf8');
     const response = await this.loginRepository.login<ILoginResponse>({
       user,
@@ -35,18 +45,29 @@ export default class LoginService {
     });
     if (response instanceof AppError) return response;
 
+    console.log(response);
 
-    console.log(response)
+    const resData = {
+      id_user: response.data.id_user
+      //va a tener mas adelante
+      // rol_name: response.data.rol
+    };
 
-   /* const resData = {
-      id_user: response.data.id_user,
-      rol_name: response.data.rol
-    };*/
+    const token = this.tokenProvider.sign({ data: resData, secret_key: private_key as string });
 
-   // const token = this.tokenProvider.sign({ data: resData, secret_key: private_key as string });
+    const ROLES = {
+      User: 2001,
+      Editor: 1984,
+      Admin: 5150
+    };
 
-   const token = '';
-
-    return { token };
+    return {
+      id: '21212',
+      username: 'Admin',
+      token,
+      firstName: 'Jorge',
+      lastName: 'Ramirez',
+      role: 'Admin'
+    };
   }
 }

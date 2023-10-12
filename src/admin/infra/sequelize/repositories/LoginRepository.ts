@@ -13,7 +13,7 @@ export default class LoginRepository implements ILoginRepository {
       const responseQuery = await DatabaseSourcePg.query<Array<ILoginResponse>>(
         `SELECT ad_user_id AS id_user, "password" FROM libertya.ad_user WHERE "name" = $1`,
         {
-          body: [user] 
+          body: [user]
         }
       );
 

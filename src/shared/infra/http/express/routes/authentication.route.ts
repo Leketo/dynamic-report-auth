@@ -40,6 +40,17 @@ export default class AuthenticationsRoutes {
       (req, res) => container.resolve(AuthenticationControllerRepository).login(req, res)
     );
 
+    router.get('/users', this.verifiedToken.verifiedToken, (req, res) =>
+      container.resolve(AuthenticationControllerRepository).getByAll(req, res)
+    );
+
+    router.get(
+      '/users/:user_id',
+      this.verifiedToken.verifiedToken,
+      (req, _, next: NextFunction) => this._validateRequest({ params: req.params }, 'findUserAdminById', next),
+      (req, res) => container.resolve(AuthenticationControllerRepository).getById(req, res)
+    );
+
     return router;
   }
 

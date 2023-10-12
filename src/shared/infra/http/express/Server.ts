@@ -5,7 +5,6 @@ import compress from 'compression';
 import express, { NextFunction, Request, Response } from 'express';
 import Router from 'express-promise-router';
 import helmet from 'helmet';
-var cors = require('cors');
 import * as http from 'http';
 
 import 'express-async-errors';
@@ -25,7 +24,17 @@ export class Server {
     this.port = port;
     this.express = express();
     this.express.use(json());
-    this.express.use(cors());
+    //this.express.use(cors());
+    const cors = require('cors');
+    const corsOptions = {
+      origin: 'http://localhost:3000',
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      credentials: true, //access-control-allow-credentials:true
+      allowedHeaders: 'Content-Type,Authorization',
+      optionSuccessStatus: 200
+    };
+
+    this.express.use(cors(corsOptions));
     this.express.use(urlencoded({ extended: true }));
     this.express.use(helmet.xssFilter());
     this.express.use(helmet.noSniff());
