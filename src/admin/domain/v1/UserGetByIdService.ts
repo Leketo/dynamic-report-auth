@@ -1,6 +1,5 @@
 import ILoginRepository, { ILoginResponse } from '@admin/repositories/ILoginRepository';
 import IEncryptDataProvider from '@shared/containers/providers/EncryptDataProvider/models/IEncryptDataProvider';
-import IHashProvider from '@shared/containers/providers/HashProvider/models/IHashProvider';
 import ITokenProvider from '@shared/containers/providers/TokenProvider/models/ITokenProvider';
 import AppError from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
@@ -27,9 +26,6 @@ export default class UserGetByIdService {
 
     @inject('EncryptDataProvider')
     private encryptDataProvider: IEncryptDataProvider,
-
-    @inject('HashProvider')
-    private hashProvider: IHashProvider,
 
     @inject('TokenProvider')
     private tokenProvider: ITokenProvider

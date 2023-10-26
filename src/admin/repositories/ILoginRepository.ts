@@ -9,8 +9,9 @@ export interface IResponseRepositorySP<T> {
 
 export interface ILoginResponse {
   id_user: string;
-  rol: number;
   password: string;
+  report_permission: number;
+  description: string;
 }
 
 export default interface ILoginRepository {

@@ -88,7 +88,7 @@ docker build -t mhschimpf/dynamic-report-auth .
 Ejecute el siguiente comando para construir el contenedor:
 
 ```
-docker run -p 3000:3000 -d mhschimpf/dynamic-report-auth
+docker run -p 3002:3002 -d mhschimpf/dynamic-report-auth
 ```
 
 

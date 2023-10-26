@@ -1,6 +1,5 @@
 import ILoginRepository, { ILoginResponse } from '@admin/repositories/ILoginRepository';
 import IEncryptDataProvider from '@shared/containers/providers/EncryptDataProvider/models/IEncryptDataProvider';
-import IHashProvider from '@shared/containers/providers/HashProvider/models/IHashProvider';
 import ITokenProvider from '@shared/containers/providers/TokenProvider/models/ITokenProvider';
 import AppError from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
@@ -20,9 +19,6 @@ export default class LoginService {
     @inject('EncryptDataProvider')
     private encryptDataProvider: IEncryptDataProvider,
 
-    @inject('HashProvider')
-    private hashProvider: IHashProvider,
-
     @inject('TokenProvider')
     private tokenProvider: ITokenProvider
   ) {}
@@ -31,10 +27,9 @@ export default class LoginService {
     | {
         id: string;
         username: string;
-        firstName: string;
+        description: string;
         token: string;
         role: string;
-        lastName: string;
       }
     | AppError
   > {
@@ -45,29 +40,20 @@ export default class LoginService {
     });
     if (response instanceof AppError) return response;
 
-    console.log(response);
-
+    // Usar los datos de la respuesta del Repository para generar el token y respuesta final
     const resData = {
-      id_user: response.data.id_user
-      //va a tener mas adelante
-      // rol_name: response.data.rol
+      id_user: response.data.id_user,
+      rol_name: response.data.report_permission === 1 ? 'Admin' : 'User'
     };
 
     const token = this.tokenProvider.sign({ data: resData, secret_key: private_key as string });
 
-    const ROLES = {
-      User: 2001,
-      Editor: 1984,
-      Admin: 5150
-    };
-
     return {
-      id: '21212',
-      username: 'Admin',
+      id: resData.id_user,
+      username: user,
       token,
-      firstName: 'Jorge',
-      lastName: 'Ramirez',
-      role: 'Admin'
+      description: response.data.description,
+      role: resData.rol_name
     };
   }
 }

@@ -2,7 +2,6 @@ import { ILoginDTO } from '@admin/dtos/ILoginDTO';
 import ILoginRepository, { ILoginResponse, IResponseRepositorySP } from '@admin/repositories/ILoginRepository';
 import AppError from '@shared/errors/AppError';
 import DatabaseSourcePg from '@shared/infra/db/pg';
-import DatabaseSourceSequelize from '@shared/infra/db/sequelize';
 
 export default class LoginRepository implements ILoginRepository {
   async login<T>({
@@ -11,7 +10,7 @@ export default class LoginRepository implements ILoginRepository {
   }: ILoginDTO): Promise<any> /*Promise<IResponseRepositorySP<ILoginResponse> | AppError>*/ {
     try {
       const responseQuery = await DatabaseSourcePg.query<Array<ILoginResponse>>(
-        `SELECT ad_user_id AS id_user, "password" FROM libertya.ad_user WHERE "name" = $1`,
+        `SELECT ad_user_id AS id_user, "password", report_permission, description FROM libertya.ad_user WHERE "name" = $1`,
         {
           body: [user]
         }
@@ -22,6 +21,15 @@ export default class LoginRepository implements ILoginRepository {
       }
 
       const userData: ILoginResponse = responseQuery[0];
+
+      // Verifica si la contraseña proporcionada coincide con la almacenada
+      if (password !== userData.password) {
+        throw new AppError({
+          message: 'La contraseña ingresada es incorrecta. Por favor, verifica tus datos e inténtalo nuevamente.',
+          errorCode: 'INVALID_CREDENTIALS',
+          statusCode: 500
+        });
+      }
 
       const response: IResponseRepositorySP<ILoginResponse> = {
         code: '200',

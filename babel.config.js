@@ -6,6 +6,7 @@ module.exports = {
       {
         alias: {
           '@shared': './src/shared',
+          '@admin': './src/admin',
         }
       }
     ],

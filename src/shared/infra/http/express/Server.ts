@@ -27,7 +27,7 @@ export class Server {
     //this.express.use(cors());
     const cors = require('cors');
     const corsOptions = {
-      origin: 'http://localhost:3000',
+      origin: '*',
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
       credentials: true, //access-control-allow-credentials:true
       allowedHeaders: 'Content-Type,Authorization',
